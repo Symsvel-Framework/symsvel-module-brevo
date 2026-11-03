@@ -1,0 +1,30 @@
+{
+    "manifests": {
+        "symsvel-framework/module-symsvel-module-brevo": {
+            "manifest": {
+                "bundles": {
+                    "SymSvel\\Module\\SymsvelModuleBrevo\\SymsvelModuleBrevoBundle": [
+                        "all"
+                    ]
+                },
+                "copy-from-recipe": {
+                    "config/": "%CONFIG_DIR%/"
+                }
+            },
+            "files": {
+                "config/routes/symsvel-module-brevo.yaml": {
+                    "contents": [
+                        "symsvel-module-brevo:",
+                        "    resource:",
+                        "        path: '@SymsvelModuleBrevoBundle/src/Controller/'",
+                        "        namespace: SymSvel\\Module\\SymsvelModuleBrevo\\Controller",
+                        "    type: attribute",
+                        ""
+                    ],
+                    "executable": false
+                }
+            },
+            "ref": "REPLACE_WITH_RECIPE_COMMIT_SHA"
+        }
+    }
+}
