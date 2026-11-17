@@ -11,7 +11,8 @@ use SymSvel\Module\Settings\Service\SettingManager;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Adapts encrypted Settings credentials to Symfony's official Brevo bridge.
+ * Registers a lazy transport that reads encrypted Settings credentials only
+ * when Brevo is selected for an actual delivery.
  * No Brevo HTTP payload is reimplemented by this module.
  */
 final class BrevoSettingsTransportFactory extends AbstractTransportFactory
@@ -28,7 +29,6 @@ final class BrevoSettingsTransportFactory extends AbstractTransportFactory
         }
 
         return new DeferredBrevoTransport($this->settings, $this->client);
-
     }
 
     protected function getSupportedSchemes(): array
