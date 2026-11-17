@@ -90,9 +90,14 @@ final class BrevoSettingsTransportFactoryTest extends TestCase
                 self::fail('No Brevo request is allowed without a configured key.');
             });
             $factory = new BrevoSettingsTransportFactory($settings, $client);
+            // Mailpit/SMTP may already be configured: creating the Brevo
+            // transport must not read Settings or reject an absent key.
+            $transport = $factory->create(new Dsn('symsvel-brevo', 'default'));
+            self::assertSame('symsvel-brevo://default', (string) $transport);
             $this->expectException(\LogicException::class);
             $this->expectExceptionMessage('Brevo API key is not configured.');
-            $factory->create(new Dsn('symsvel-brevo', 'default'));
+            $transport->send((new Email())->from('sender@example.test')
+                ->to('to@example.test')->subject('Test')->text('Test'));
         } finally {
             $entityManager->getConnection()->close();
         }
