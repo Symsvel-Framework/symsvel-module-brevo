@@ -6,11 +6,15 @@ Il s’intègre aux modules **Mails** (choix du transport et identité expéditr
 
 ## Installation
 
-Depuis un projet SymSvel en développement, via la CLI unique :
+Depuis un projet SymSvel **créé avec `symsvel create-project --dev`**, via la CLI unique :
 
 ```bash
-symsvel require symsvel-framework/module-brevo --dev
+symsvel require symsvel-framework/module-brevo
 ```
+
+Le canal `dev` est déjà enregistré dans le projet : la CLI choisit automatiquement `dev-dev` et le dépôt GitHub du module. Ne pas passer `--dev` à `symsvel require`. Cette installation de développement n'exige pas que Brevo soit publié sur Satis. Les dépendances Mails et Settings doivent toutefois être installées dans leurs versions de développement compatibles.
+
+**Canal stable :** une installation via Satis exige une release fonctionnelle de Brevo **et** des releases compatibles de Mails et Settings. Leurs tags `0.1.0` actuels sont des squelettes initiaux qui ne fournissent pas encore les contrats nécessaires. Il serait incorrect de publier Brevo `1.0.0` avec ses exigences `dev-dev` tant que cette chaîne n'est pas stabilisée.
 
 Configurer ensuite dans le BO :
 
@@ -24,4 +28,4 @@ Le module ne possède **aucune table, migration, écran dédié ou endpoint de d
 
 ## État
 
-Implémentation initiale sur `dev`, validation CI et crash-test local du fournisseur restant nécessaires. Aucun appel réel à Brevo n'est réalisé par les tests.
+Implémentation du transport sur `dev`, avec CI automatisée verte et tests de requêtes HTTP simulées. Crash-tests locaux d'installation Composer/Flex/Satis et envoi avec clé Brevo réelle encore nécessaires. La PR draft vers `main` ne doit pas être mergée et aucune release `1.0.0` ne doit être créée avant validation de la chaîne Mails/Settings/Recette.
