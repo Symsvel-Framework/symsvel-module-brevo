@@ -9,6 +9,7 @@ use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;
 use SymSvel\Module\Settings\Service\SettingManager;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Adapts encrypted Settings credentials to Symfony's official Brevo bridge.
@@ -16,9 +17,9 @@ use SymSvel\Module\Settings\Service\SettingManager;
  */
 final class BrevoSettingsTransportFactory extends AbstractTransportFactory
 {
-    public function __construct(private readonly SettingManager $settings)
+    public function __construct(private readonly SettingManager $settings, HttpClientInterface $client)
     {
-        parent::__construct();
+        parent::__construct(client: $client);
     }
 
     public function create(Dsn $dsn): TransportInterface
