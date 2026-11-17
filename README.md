@@ -1,7 +1,27 @@
-# SymsvelModuleBrevo
+# Brevo pour SymSvel
 
-Module SymSvel (manifest schema 1).
+Module **optionnel** de transport d’e-mails transactionnels par l’API Brevo.
 
-## CI (10/11/2026)
+Il s’intègre aux modules **Mails** (choix du transport et identité expéditrice) et **Settings** (chiffrement de la clé API). L’envoi réel s’appuie sur le bridge officiel `symfony/brevo-mailer` : aucune requête HTTP métier n’est réimplémentée dans SymSvel.
 
-`.github/workflows/qa.yml` exécute Composer et les tests du module sur le runner Docker ARM64 d'organisation (`self-hosted`, `linux`, `ARM64`, `symsvel`), avec PHP 8.4 préinstallé. La CI GitHub-hosted originale est conservée et désactivée dans `.github/workflows/qa.yml.stub`. Pour revenir aux runners GitHub, restaurer ce `.stub` sous le nom `qa.yml`. Les jobs locaux nécessitent que le Mac et Docker soient disponibles ; runner réservé aux contributions de confiance. Validation finale soumise à une CI verte.
+## Installation
+
+Depuis un projet SymSvel en développement, via la CLI unique :
+
+```bash
+symsvel require symsvel-framework/module-brevo --dev
+```
+
+Configurer ensuite dans le BO :
+
+1. **Paramètres → Brevo** : `brevo.api_key`, clé API transactionnelle v3 ;
+2. **Paramètres → Mails** : expéditeur `mails.sender_email` et éventuellement `mails.sender_name` ;
+3. **Paramètres → Mails** : transport `mails.transport = brevo`.
+
+Une fois la recette du module appliquée, Brevo apparaît parmi les choix de transport. La présence du choix ne valide ni la clé ni la connexion à Brevo. Si l'installation n'a pas de clé API, l'envoi est refusé explicitement. Aucun mécanisme de repli vers Mailpit ou SMTP n'est déclenché automatiquement.
+
+Le module ne possède **aucune table, migration, écran dédié ou endpoint de diagnostic**. Les réglages sont affichés par le BO Settings existant. L'adresse et le nom d'expéditeur restent déclarés par Mails, et les templates sont gérés par les modules émetteurs.
+
+## État
+
+Implémentation initiale sur `dev`, validation CI et crash-test local du fournisseur restant nécessaires. Aucun appel réel à Brevo n'est réalisé par les tests.
