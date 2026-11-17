@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SymSvel\Module\Brevo\Mail;
 
-use Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory;
 use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;
@@ -28,15 +27,8 @@ final class BrevoSettingsTransportFactory extends AbstractTransportFactory
             throw new \InvalidArgumentException('Unsupported Brevo transport DSN.');
         }
 
-        $apiKey = trim((string) $this->settings->get('brevo.api_key'));
-        if ($apiKey === '') {
-            throw new \LogicException('Brevo API key is not configured.');
-        }
+        return new DeferredBrevoTransport($this->settings, $this->client);
 
-        // The Symfony bridge owns Brevo's API request, MIME attachments,
-        // transport errors and HTTPS. Never expose the key in an exception.
-        return (new BrevoTransportFactory($this->dispatcher, $this->client, $this->logger))
-            ->create(new Dsn('brevo+api', 'default', $apiKey));
     }
 
     protected function getSupportedSchemes(): array
