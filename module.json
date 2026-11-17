@@ -1,7 +1,10 @@
 {
     "schema": 1,
-    "name": "SymsvelModuleBrevo",
-    "dependencies": {},
+    "name": "Brevo",
+    "dependencies": {
+        "mails": "*",
+        "settings": "*"
+    },
     "tables": [],
     "components": {
         "back": "back"
