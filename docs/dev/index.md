@@ -7,7 +7,7 @@ Ce module reprend le périmètre de `xcore-legacy-module-brevo` sans recopier so
 `BrevoBundle` déclare trois services distincts :
 - `BrevoTransportProvider`, tag `symsvel.mails.transport_provider`, ajoute **brevo** aux transports nommés proposés par Mails ;
 - `BrevoSettingDefinitionProvider`, tag `symsvel.settings.definition_provider`, fournit `api_key` dans le namespace propriétaire `brevo`, donc `brevo.api_key`, secret, privé, non bloquant à l'installation ;
-- `BrevoSettingsTransportFactory`, tag natif `mailer.transport_factory`, reconnaît exclusivement `symsvel-brevo://default`, lit `brevo.api_key` via `SettingManager` au moment de l'initialisation du transport, construit le DSN `brevo+api://KEY@default` et délègue à `BrevoTransportFactory` natif.
+- `BrevoSettingsTransportFactory`, tag natif `mailer.transport_factory`, reconnaît exclusivement `symsvel-brevo://default`, fabrique un `DeferredBrevoTransport` **sans consulter la clé**. C'est seulement lors de `send()` que ce transport lit `brevo.api_key` via `SettingManager`, construit le DSN `brevo+api://KEY@default` et délègue au `BrevoTransportFactory` natif.
 
 Le bundle ajoute `framework.mailer.transports.brevo = symsvel-brevo://default` dans `prependExtension`, uniquement lorsqu'il est installé. Cette configuration doit être vérifiée par un crash-test Symfony du Back réellement assemblé ; la recette Flex n'ajoute aucun endpoint ni route. Aucune valeur sensible n'est stockée dans le code, `module.json` ou la recette.
 
@@ -20,7 +20,7 @@ Les clés de Settings sont :
 
 Lorsqu'un mail transactionnel est envoyé par `ConfiguredMailSender`, Mails fixe `X-Transport: brevo` et Symfony Mailer choisit le transport nommé. La route Messenger `SendEmailMessage: sync` du Back fait tenter l'envoi dans la requête, conformément à la décision prise le 17/11/2026 ; Brevo n'ajoute ni job Doctrine, ni queue, ni runner. La sélection de Mailpit doit continuer à fonctionner sans clé Brevo : le provider reste optionnel et n'effectue aucun appel réseau au démarrage. L'absence de clé alors que Brevo est choisi déclenche une exception explicite, sans révéler la clé.
 
-Symfony Brevo Mailer gère nativement MIME, pièces jointes, destinataires, transport HTTPS et erreurs d'API ; aucune fonction transactionnelle App/Auth/BO ne réside dans ce module. Le changement de clé en BDD n'est effectif sur un transport déjà instancié qu'après son renouvellement, généralement une nouvelle requête dans le modèle PHP-FPM standard. Les workers durables devront être testés séparément si utilisés à l'avenir.
+Symfony Brevo Mailer gère nativement MIME, pièces jointes, destinataires, transport HTTPS et erreurs d'API ; aucune fonction transactionnelle App/Auth/BO ne réside dans ce module. La clé est relue pour **chaque envoi Brevo**. Même lorsqu'un conteneur Symfony initialise tous les transports nommés, une clé absente n'empêche donc ni Mailpit ni SMTP de fonctionner. Le test `BrevoSettingsTransportFactoryTest` vérifie que la création du transport est possible sans clé et que seule la tentative d'envoi Brevo échoue. Les workers durables devront être testés séparément si utilisés à l'avenir.
 
 ## Installation et compatibilité
 
