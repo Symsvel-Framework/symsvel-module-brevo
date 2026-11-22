@@ -30,6 +30,12 @@ Le module ne possède **aucune table, migration, écran dédié ou endpoint de d
 
 Implémentation du transport sur `dev`, avec CI automatisée verte et tests de requêtes HTTP simulées. Crash-tests locaux d'installation Composer/Flex/Satis et envoi avec clé Brevo réelle encore nécessaires. La PR draft vers `main` ne doit pas être mergée et aucune release `1.0.0` ne doit être créée avant validation de la chaîne Mails/Settings/Recette.
 
+## Intégration continue GitHub-hosted (22/11/2026)
+
+Le workflow public `.github/workflows/qa.yml` utilise désormais **GitHub-hosted Ubuntu 24.04** au lieu des runners Docker du mainteneur. Les tests Composer et PHP 8.4 restent actifs. Les tests d'interface installent Chromium et ses dépendances système lorsque nécessaire.
+
+Les runners auto-hébergés sont réservés à `symsvel-packages` et `symsvel-recipes`, qui restent privés. Une CI verte ne dispense pas des crash-tests locaux.
+
 ## Licence MIT et contributions
 
 Ce dépôt est distribué sous [licence MIT](LICENSE). Le code peut être utilisé, modifié et redistribué, y compris dans des projets commerciaux ou propriétaires, dans les conditions de cette licence (notamment la conservation de la notice de copyright et de licence).
