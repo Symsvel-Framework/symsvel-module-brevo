@@ -22,9 +22,9 @@ jobs:
         run: |
           php -v
           php -r 'if (PHP_VERSION_ID < 80400 || PHP_VERSION_ID >= 80500) { exit(1); }'
-      - name: Install private Composer dependencies
+      - name: Install public Composer dependencies
         env:
-          SYMSVEL_READ_TOKEN: ${{ secrets.SYMSVEL_READ_TOKEN }}
+          SYMSVEL_READ_TOKEN: ${{ github.token }}
         run: |
           test -n "$SYMSVEL_READ_TOKEN"
           for repo in symsvel-module-mails symsvel-module-settings symsvel-module-acls; do
