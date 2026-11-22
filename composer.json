@@ -2,7 +2,7 @@
     "name": "symsvel-framework/module-brevo",
     "description": "Optional Brevo API transport provider for SymSvel Mails",
     "type": "symfony-bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": ">=8.4",
         "symfony/framework-bundle": "^8.1",
